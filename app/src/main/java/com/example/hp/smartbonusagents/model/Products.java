@@ -2,50 +2,40 @@ package com.example.hp.smartbonusagents.model;
 
 public class Products {
 
-    private int id;
     private String photo;
     private String name;
-    private float price;
+    private String price;
 
     public Products() {
     }
 
-    public Products(int id, String photo, String name, float price) {
-        this.id = id;
+    public Products(String photo, String name, String price) {
         this.photo = photo;
         this.name = name;
         this.price = price;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public String getPhoto() {
         return photo;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public float getPrice() {
-        return price;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public void setPhoto(String photo) {
         this.photo = photo;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public void setPrice(float price) {
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
         this.price = price;
     }
 }
