@@ -1,16 +1,19 @@
 package com.example.hp.smartbonusagents.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.hp.smartbonusagents.R;
+import com.example.hp.smartbonusagents.activities.ProductActivity;
 import com.example.hp.smartbonusagents.model.Products;
 
 import java.util.List;
@@ -35,7 +38,21 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         LayoutInflater inflater = LayoutInflater.from(mContext);
         view = inflater.inflate(R.layout.products_row_item, parent,false);
 
-        return new MyViewHolder(view);
+        final MyViewHolder myViewHolder = new MyViewHolder(view);
+
+        myViewHolder.view_container.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(mContext, ProductActivity.class);
+                i.putExtra("product_name", mData.get(myViewHolder.getAdapterPosition()).getName());
+                i.putExtra("product_price", mData.get(myViewHolder.getAdapterPosition()).getPrice());
+                i.putExtra("product_photo", mData.get(myViewHolder.getAdapterPosition()).getPhoto());
+
+                mContext.startActivity(i);
+            }
+        });
+
+        return myViewHolder;
     }
 
     @Override
@@ -59,6 +76,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         TextView tv_name;
         TextView tv_price;
         ImageView img_photo;
+        LinearLayout view_container;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -66,6 +84,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             tv_name = itemView.findViewById(R.id.name);
             tv_price = itemView.findViewById(R.id.price);
             img_photo = itemView.findViewById(R.id.photo);
+            view_container = itemView.findViewById(R.id.container);
 
         }
     }
