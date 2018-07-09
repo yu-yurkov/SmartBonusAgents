@@ -13,12 +13,15 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.hp.smartbonusagents.R;
 import com.example.hp.smartbonusagents.adapters.RecyclerViewAdapter;
+import com.example.hp.smartbonusagents.model.DB;
 import com.example.hp.smartbonusagents.model.Products;
+import com.example.hp.smartbonusagents.model.UserCart;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Console;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +35,9 @@ public class MainActivity extends AppCompatActivity {
     private List<Products> listProducts;
     private RecyclerView recyclerView;
 
+    // корзина пользователя
+    private ArrayList<UserCart> userCart;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +49,15 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recycler_view_id);
         jsonrequest();
+
+
+        // наполняем корзину
+       userCart = new DB().getList();
+
+        for (int i = 0; i < userCart.size(); i++) {
+            Log.i("TAG", userCart.get(i).toString());
+        }
+
     }
 
     private void jsonrequest() {
