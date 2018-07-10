@@ -1,5 +1,6 @@
 package com.example.hp.smartbonusagents.activities;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,6 +25,8 @@ import org.json.JSONObject;
 import java.io.Console;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,12 +41,11 @@ public class MainActivity extends AppCompatActivity {
     // корзина пользователя
     private ArrayList<UserCart> userCart;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
 
         listProducts = new ArrayList<>();
 
@@ -52,11 +54,33 @@ public class MainActivity extends AppCompatActivity {
 
 
         // наполняем корзину
-       userCart = new DB().getList();
+        /*
+        userCart = new DB().getList();
 
         for (int i = 0; i < userCart.size(); i++) {
             Log.i("TAG", userCart.get(i).toString());
         }
+        */
+
+        TreeMap<Integer, TreeMap<String, String>> treeMap = new DB().getTreeMap();
+
+        /*
+        for(Map.Entry<Integer, TreeMap <String, String>> entry : treeMap.entrySet()) {
+            Integer key = entry.getKey();
+            TreeMap <String, String> value = entry.getValue();
+
+            Log.i("TAG", key + ":");
+
+            for(Map.Entry<String,String> product : value.entrySet()) {
+                String keyProduct = product.getKey();
+                String valueProduct = product.getValue();
+
+                Log.i("TAG", keyProduct + " " + valueProduct);
+            }
+        }
+        */
+
+        Log.i("TAG", "" + treeMap.size());
 
     }
 

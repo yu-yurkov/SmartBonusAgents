@@ -1,18 +1,63 @@
 package com.example.hp.smartbonusagents.model;
 
+import com.example.hp.smartbonusagents.R;
+
 import java.util.ArrayList;
+import java.util.TreeMap;
 
 public class DB {
 
-    ArrayList<UserCart> list;
+    // структура базы данных
+    /*
+        id (int)
+        name (varchar 255)
+        img (varchar 255)
+        price (decimal)
+        quantity (int)
+    */
+
+    /*
+        ArrayList<UserCart> list = new ArrayList<UserCart>();
+
+        public DB(){
+            list.add(new UserCart(1,10, new Products("Фото", "Заголовок","115.00")));
+            list.add(new UserCart(2,5, new Products("Фото2", "Заголовок2","120.00")));
+          }
+
+        public ArrayList<UserCart> getList() {
+            return list;
+        }
+    */
+
+    TreeMap<Integer, TreeMap<String, String>> treeMap = new TreeMap<Integer, TreeMap <String, String>>();
 
     public DB(){
-        list.add(new UserCart(1, "Мёд «Дальневосточный» липовый", 115F, "https://sbonus.ru/images/6-jpg-small-4395.jpg", 10));
-        list.add(new UserCart(2, "Мёд «Дальневосточный» липовый с ядрами кешью", 138F, "https://sbonus.ru/images/4-jpg-small-4393.jpg", 8));
-        list.add(new UserCart(3, "Мёд «Дальневосточный» липовый с ядрами миндаля", 138F, "https://sbonus.ru/images/5-jpg-small-4394.jpg", 6));
+
+        if(!treeMap.containsKey(1)){
+            treeMap.put(1, new TreeMap<String, String>());
+            TreeMap <String, String> temp = treeMap.get(1);
+
+            if(!temp.containsKey("name")) temp.put("name", "Название");
+            if(!temp.containsKey("img")) temp.put("img", "image");
+            if(!temp.containsKey("price")) temp.put("price", "100.99");
+            if(!temp.containsKey("quantity")) temp.put("quantity", "10");
+        }
+
+        if(!treeMap.containsKey(2)){
+            treeMap.put(2, new TreeMap<String, String>());
+            TreeMap <String, String> temp = treeMap.get(2);
+
+            if(!temp.containsKey("name")) temp.put("name", "Название2");
+            if(!temp.containsKey("img")) temp.put("img", "image2");
+            if(!temp.containsKey("price")) temp.put("price", "200.99");
+            if(!temp.containsKey("quantity")) temp.put("quantity", "20");
+        }
+
     }
 
-    public ArrayList<UserCart> getList() {
-        return list;
+    public TreeMap<Integer, TreeMap<String, String>> getTreeMap() {
+        return treeMap;
     }
+
+
 }

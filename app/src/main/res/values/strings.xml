@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Smart Bonus Agents</string>
+    <string name="quantity">10</string>
 </resources>
