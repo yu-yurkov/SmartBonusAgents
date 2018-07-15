@@ -97,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
                         jsonObject = response.getJSONObject(i);
                         Products products = new Products();
 
+                        products.setId(jsonObject.getInt("id"));
                         products.setName(jsonObject.getString("name"));
                         products.setPrice(jsonObject.getString("price"));
                         products.setPhoto(jsonObject.getString("photo"));

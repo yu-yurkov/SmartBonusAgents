@@ -2,6 +2,7 @@ package com.example.hp.smartbonusagents.model;
 
 public class Products {
 
+    int id;
     private String photo;
     private String name;
     private String price;
@@ -9,10 +10,19 @@ public class Products {
     public Products() {
     }
 
-    public Products(String photo, String name, String price) {
+    public Products(int id, String photo, String name, String price) {
+        this.id = id;
         this.photo = photo;
         this.name = name;
         this.price = price;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getPhoto() {
