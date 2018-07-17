@@ -56,6 +56,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 Log.i(TAG, "onClick: Product_id =  " + mData.get(myViewHolder.getAdapterPosition()).getId());
                 v.setBackground(v.getContext().getDrawable(R.drawable.button_bg));
 
+
+
                 // вызов метода обработки клика
                 /*
                 *   1. меняем фон кнопки (toggle)

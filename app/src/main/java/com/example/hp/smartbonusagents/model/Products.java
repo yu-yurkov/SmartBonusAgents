@@ -1,5 +1,7 @@
 package com.example.hp.smartbonusagents.model;
 
+import android.arch.persistence.room.Ignore;
+
 public class Products {
 
     int id;

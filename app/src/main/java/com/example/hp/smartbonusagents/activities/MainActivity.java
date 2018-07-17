@@ -1,5 +1,6 @@
 package com.example.hp.smartbonusagents.activities;
 
+import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,6 +15,10 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.hp.smartbonusagents.R;
 import com.example.hp.smartbonusagents.adapters.RecyclerViewAdapter;
+import com.example.hp.smartbonusagents.dao.UserCartDao;
+import com.example.hp.smartbonusagents.database.App;
+import com.example.hp.smartbonusagents.database.AppDatabase;
+import com.example.hp.smartbonusagents.entities.UserCartEntity;
 import com.example.hp.smartbonusagents.model.DB;
 import com.example.hp.smartbonusagents.model.Products;
 import com.example.hp.smartbonusagents.model.UserCart;
@@ -31,6 +36,9 @@ import java.util.TreeMap;
 public class MainActivity extends AppCompatActivity {
 
 
+    private static final String TAG = "userCarts";
+
+
     private final String JSON_URL = "https://agents.sbonus.ru/json/";
     //private final String JSON_URL = "https://gist.githubusercontent.com/aws1994/f583d54e5af8e56173492d3f60dd5ebf/raw/c7796ba51d5a0d37fc756cf0fd14e54434c547bc/anime.json";
     private JsonArrayRequest request;
@@ -46,6 +54,47 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // DB
+        AppDatabase db =  Room.databaseBuilder(getApplicationContext(),
+                AppDatabase.class, "database-2").allowMainThreadQueries().build();
+
+        // AppDatabase db = App.getInstance().getDatabase();
+
+        UserCartDao userCartDao = db.userCartDao();
+
+        UserCartEntity userCartEntity = new UserCartEntity();
+
+        userCartEntity.quantity = 20;
+        userCartEntity.products = new Products(3,"photo","мёд","151");
+
+        userCartDao.insert(userCartEntity);
+
+
+//        // проверяем есть ли в базе такой элемент
+//        UserCart userCartId = userCartDao.getById(111);
+//
+//        if(userCartId == null){
+//            userCartDao.insert(userCart);
+//        }
+
+
+
+
+
+        List<UserCartEntity> userCartsEntities = userCartDao.getAll();
+
+
+        for (UserCartEntity element : userCartsEntities) {
+            Log.i(TAG, "id: " + element.id);
+        }
+
+        //Log.i(TAG, "onCreate: " + userCarts.size());
+
+
+
+
+
 
         listProducts = new ArrayList<>();
 
@@ -81,6 +130,9 @@ public class MainActivity extends AppCompatActivity {
         */
 
         Log.i("TAG", "" + treeMap.size());
+
+
+
 
     }
 
