@@ -55,32 +55,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // DB
-        AppDatabase db =  Room.databaseBuilder(getApplicationContext(),
-                AppDatabase.class, "database-2").allowMainThreadQueries().build();
-
-        // AppDatabase db = App.getInstance().getDatabase();
-
+        AppDatabase db = App.getInstance().getDatabase();
         UserCartDao userCartDao = db.userCartDao();
-
-        UserCartEntity userCartEntity = new UserCartEntity();
-
-        userCartEntity.quantity = 20;
-        userCartEntity.products = new Products(3,"photo","мёд","151");
-
-        userCartDao.insert(userCartEntity);
-
-
-//        // проверяем есть ли в базе такой элемент
-//        UserCart userCartId = userCartDao.getById(111);
-//
-//        if(userCartId == null){
-//            userCartDao.insert(userCart);
-//        }
-
-
-
-
 
         List<UserCartEntity> userCartsEntities = userCartDao.getAll();
 

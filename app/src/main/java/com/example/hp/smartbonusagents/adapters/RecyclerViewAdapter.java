@@ -18,7 +18,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.hp.smartbonusagents.R;
 import com.example.hp.smartbonusagents.activities.ProductActivity;
+import com.example.hp.smartbonusagents.dao.UserCartDao;
+import com.example.hp.smartbonusagents.database.App;
+import com.example.hp.smartbonusagents.database.AppDatabase;
+import com.example.hp.smartbonusagents.entities.UserCartEntity;
 import com.example.hp.smartbonusagents.model.Products;
+import com.example.hp.smartbonusagents.model.UserCart;
 
 import java.util.List;
 
@@ -53,10 +58,47 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             @SuppressLint("NewApi")
             @Override
             public void onClick(View v) {
-                Log.i(TAG, "onClick: Product_id =  " + mData.get(myViewHolder.getAdapterPosition()).getId());
-                v.setBackground(v.getContext().getDrawable(R.drawable.button_bg));
+
+                AppDatabase db = App.getInstance().getDatabase();
+                UserCartDao userCartDao = db.userCartDao();
+
+                // определяем id товара
+                int p_id = mData.get(myViewHolder.getAdapterPosition()).getId();
+
+                // формируем данные
+                UserCartEntity userCartEntity = new UserCartEntity();
+                userCartEntity.id = p_id;
+                userCartEntity.quantity = 1;
+                userCartEntity.products = mData.get(myViewHolder.getAdapterPosition());
+
+                // проверяем наличие товара в корзине
+                UserCartEntity userCartId = userCartDao.getById(p_id);
+
+                if(userCartId == null){
+                    Log.i(TAG, "onClick: добавляем товар в корзину: id = " + p_id);
+                    v.setBackgroundResource(R.color.colorAccent);
+
+                    // закидываем в корзину
+                    userCartDao.insert(userCartEntity);
+
+                }else{
+                    Log.i(TAG, "onClick: товар уже в корзине. Убираем");
+
+                    // удаляем из корзины
+                    userCartDao.delete(userCartEntity);
+                }
 
 
+                List<UserCartEntity> userCartsEntities = userCartDao.getAll();
+
+                for (UserCartEntity element : userCartsEntities) {
+                    Log.i(TAG, "id: " + element.id
+                            +", quantity: "+ element.quantity
+                            +", p_id: "+ element.products.getId()
+                            + ", p_name: " + element.products.getName()
+                            + ", p_price: " + element.products.getPrice()
+                            + ", p_img: " + element.products.getPhoto());
+                }
 
                 // вызов метода обработки клика
                 /*
@@ -67,6 +109,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 * */
             }
         });
+
+
+
 
         // enter card
         myViewHolder.view_container.setOnClickListener(new View.OnClickListener() {
@@ -86,6 +131,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         return myViewHolder;
     }
+
+
+
+
+
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {

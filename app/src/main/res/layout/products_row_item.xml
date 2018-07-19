@@ -39,6 +39,7 @@
             android:layout_height="wrap_content"
             android:text="add cart"
             android:id="@+id/add_cart_button"
+            style="@style/Widget.AppCompat.Button"
             />
 
     </LinearLayout>
