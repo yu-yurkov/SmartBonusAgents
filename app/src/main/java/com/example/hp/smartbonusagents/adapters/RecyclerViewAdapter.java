@@ -74,9 +74,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 // проверяем наличие товара в корзине
                 UserCartEntity userCartId = userCartDao.getById(p_id);
 
+                //Button button = v.findViewById(v.getId());
+
                 if(userCartId == null){
                     Log.i(TAG, "onClick: добавляем товар в корзину: id = " + p_id);
                     v.setBackgroundResource(R.color.colorAccent);
+
+
 
                     // закидываем в корзину
                     userCartDao.insert(userCartEntity);
