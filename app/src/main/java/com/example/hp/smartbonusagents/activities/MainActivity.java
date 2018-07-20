@@ -2,6 +2,7 @@ package com.example.hp.smartbonusagents.activities;
 
 import android.arch.persistence.room.Room;
 import android.content.Intent;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,6 +10,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -38,9 +41,7 @@ import java.util.TreeMap;
 
 public class MainActivity extends AppCompatActivity {
 
-
     private static final String TAG = "userCarts";
-
 
     private final String JSON_URL = "https://agents.sbonus.ru/json/";
     //private final String JSON_URL = "https://gist.githubusercontent.com/aws1994/f583d54e5af8e56173492d3f60dd5ebf/raw/c7796ba51d5a0d37fc756cf0fd14e54434c547bc/anime.json";
@@ -48,15 +49,50 @@ public class MainActivity extends AppCompatActivity {
     private RequestQueue requestQueue;
     private List<Products> listProducts;
     private RecyclerView recyclerView;
+    private TreeMap<Integer, Integer> userCartMap;
 
     // корзина пользователя
     private ArrayList<UserCart> userCart;
 
+    TextView textCartItemCount;
+    int mCartItemCount = 0;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main,menu);
+
+        final MenuItem menuItem = menu.findItem(R.id.action_cart);
+
+        View actionView = MenuItemCompat.getActionView(menuItem);
+        textCartItemCount = (TextView) actionView.findViewById(R.id.cart_badge);
+
+        setupBadge();
+
+        actionView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onOptionsItemSelected(menuItem);
+            }
+        });
+
         return true;
+    }
+
+    private void setupBadge() {
+
+        if (textCartItemCount != null) {
+            if (mCartItemCount == 0) {
+                if (textCartItemCount.getVisibility() != View.GONE) {
+                    textCartItemCount.setVisibility(View.GONE);
+                }
+            } else {
+                textCartItemCount.setText(String.valueOf(Math.min(mCartItemCount, 99)));
+                if (textCartItemCount.getVisibility() != View.VISIBLE) {
+                    textCartItemCount.setVisibility(View.VISIBLE);
+                }
+            }
+        }
+
     }
 
     @Override
@@ -72,60 +108,37 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
+        // массив с корзиной
+        List<UserCartEntity> userCart;
+        userCartMap = new TreeMap<Integer, Integer>();
+
         AppDatabase db = App.getInstance().getDatabase();
         UserCartDao userCartDao = db.userCartDao();
 
-        List<UserCartEntity> userCartsEntities = userCartDao.getAll();
+        userCart = userCartDao.getAll();
 
-
-        for (UserCartEntity element : userCartsEntities) {
-            Log.i(TAG, "id: " + element.id);
+        // упаковываем в TreeMap
+        for (UserCartEntity element : userCart) {
+            userCartMap.put(element.id, element.quantity);
         }
 
-        //Log.i(TAG, "onCreate: " + userCarts.size());
+        // устанавливаем количество товаров в карзине
+        mCartItemCount = userCartMap.size();
 
+        // проверяем MAP
 
-
-
+//        for(Map.Entry<Integer, Integer> entry : userCartMap.entrySet()) {
+//            Integer key = entry.getKey();
+//            Integer value = entry.getValue();
+//
+//            Log.i("userCartMap", "id: " + key + "Quantity: " + value);
+//        }
 
 
         listProducts = new ArrayList<>();
 
         recyclerView = findViewById(R.id.recycler_view_id);
         jsonrequest();
-
-
-        // наполняем корзину
-        /*
-        userCart = new DB().getList();
-
-        for (int i = 0; i < userCart.size(); i++) {
-            Log.i("TAG", userCart.get(i).toString());
-        }
-        */
-
-        TreeMap<Integer, TreeMap<String, String>> treeMap = new DB().getTreeMap();
-
-        /*
-        for(Map.Entry<Integer, TreeMap <String, String>> entry : treeMap.entrySet()) {
-            Integer key = entry.getKey();
-            TreeMap <String, String> value = entry.getValue();
-
-            Log.i("TAG", key + ":");
-
-            for(Map.Entry<String,String> product : value.entrySet()) {
-                String keyProduct = product.getKey();
-                String valueProduct = product.getValue();
-
-                Log.i("TAG", keyProduct + " " + valueProduct);
-            }
-        }
-        */
-
-        Log.i("TAG", "" + treeMap.size());
-
-
-
 
     }
 
@@ -175,10 +188,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void setuprecycleview(List<Products> listProducts) {
 
-        RecyclerViewAdapter myAdapter = new RecyclerViewAdapter(this,listProducts);
+        RecyclerViewAdapter myAdapter = new RecyclerViewAdapter(this,listProducts, userCartMap);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         recyclerView.setAdapter(myAdapter);
 
     }
 }
+
+

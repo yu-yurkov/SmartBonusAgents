@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.hp.smartbonusagents.R;
+import com.example.hp.smartbonusagents.activities.MainActivity;
 import com.example.hp.smartbonusagents.activities.ProductActivity;
 import com.example.hp.smartbonusagents.dao.UserCartDao;
 import com.example.hp.smartbonusagents.database.App;
@@ -26,6 +27,7 @@ import com.example.hp.smartbonusagents.model.Products;
 import com.example.hp.smartbonusagents.model.UserCart;
 
 import java.util.List;
+import java.util.TreeMap;
 
 import static com.example.hp.smartbonusagents.R.drawable.button_bg;
 
@@ -35,11 +37,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private static final String TAG = "TAG";
     private Context mContext;
     private List<Products> mData;
+    private TreeMap<Integer, Integer> userCartMap;
     RequestOptions option;
 
-    public RecyclerViewAdapter(Context mContext, List<Products> mData) {
+    public RecyclerViewAdapter(Context mContext, List<Products> mData, TreeMap<Integer, Integer> userCartMap) {
         this.mContext = mContext;
         this.mData = mData;
+        this.userCartMap = userCartMap;
 
         // Options for Glide
         this.option = new RequestOptions().centerCrop().placeholder(R.drawable.loading_shape).error(R.drawable.loading_shape);
@@ -87,6 +91,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                 }else{
                     Log.i(TAG, "onClick: товар уже в корзине. Убираем");
+
+                    v.setBackgroundResource(R.color.colorPrimaryDark);
 
                     // удаляем из корзины
                     userCartDao.delete(userCartEntity);
@@ -143,6 +149,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
+
+        // создаем мап с id товаров в корзине
+        // сравниваем id товара с мапом
+        //  если в мапе есть id меняем стиль кнопки или отмечаем ее как ВКЛ
+
+        if(userCartMap.containsKey(mData.get(position).getId())){
+            holder.addCartButton.setBackgroundResource(R.color.colorAccent);
+        }
+
+
         holder.tv_name.setText(mData.get(position).getName());
         holder.tv_price.setText(mData.get(position).getPrice());
 
